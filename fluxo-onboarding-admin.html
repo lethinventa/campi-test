@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxo — Onboarding Admin · Campi</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-50:  #f0f7ee;
+    --green-100: #d4eacf;
+    --green-300: #82c177;
+    --green-500: #3d8b35;
+    --green-700: #2a5f24;
+    --green-900: #162f12;
+    --amber-100: #fef3cd;
+    --amber-400: #f5a623;
+    --amber-700: #8a5d0a;
+    --purple-100: #ede9fe;
+    --purple-400: #7c5cbf;
+    --purple-700: #3d2a7a;
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-400: #3b82f6;
+    --blue-700: #1d4ed8;
+    --gray-50:  #f8f8f6;
+    --gray-100: #eeede8;
+    --gray-200: #d8d7d0;
+    --gray-400: #9b9a93;
+    --gray-600: #5c5b55;
+    --gray-800: #2a2a26;
+    --gray-900: #1a1a17;
+    --bg: #f5f4ef;
+    --card: #ffffff;
+    --text: #1a1a17;
+    --muted: #6b6a63;
+    --line: #d0cfca;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  header {
+    max-width: 760px;
+    margin: 0 auto 56px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green-500);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .doc-meta { text-align: right; }
+  .doc-title { font-size: 22px; font-weight: 600; color: var(--gray-900); line-height: 1.2; }
+  .doc-sub { font-size: 13px; color: var(--muted); margin-top: 4px; font-family: 'DM Mono', monospace; }
+
+  .divider { max-width: 760px; margin: 0 auto 56px; height: 1px; background: var(--line); }
+
+  .flow {
+    max-width: 580px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* PHASE LABEL */
+  .phase-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gray-400);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 4px 0 8px;
+  }
+
+  /* NODES */
+  .node { width: 100%; }
+
+  .node-inner {
+    border-radius: 10px;
+    padding: 14px 20px;
+    border: 1px solid transparent;
+  }
+
+  .node-label {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+  }
+
+  .node-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .node-sub { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  .node-pill .node-inner { border-radius: 40px; padding: 10px 24px; text-align: center; }
+
+  /* variants */
+  .node-start .node-inner { background: var(--gray-900); border-color: var(--gray-900); }
+  .node-start .node-title { color: #fff; font-size: 14px; }
+
+  .node-end .node-inner { background: var(--green-500); border-color: var(--green-500); }
+  .node-end .node-title { color: #fff; font-size: 14px; }
+
+  .node-system .node-inner { background: var(--blue-50); border-color: var(--blue-100); }
+  .node-system .node-label { color: var(--blue-400); }
+  .node-system .node-title { color: var(--blue-700); }
+  .node-system .node-sub { color: var(--blue-400); opacity: 0.9; }
+
+  .node-action .node-inner { background: var(--card); border-color: var(--gray-200); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .node-action .node-label { color: var(--purple-400); }
+  .node-action .node-title { color: var(--gray-900); }
+
+  .node-validation .node-inner { background: var(--amber-100); border-color: #f5d87a; }
+  .node-validation .node-label { color: var(--amber-700); }
+  .node-validation .node-title { color: var(--amber-700); font-size: 13px; font-weight: 500; }
+
+  .node-welcome .node-inner { background: var(--green-50); border-color: var(--green-100); }
+  .node-welcome .node-label { color: var(--green-500); }
+  .node-welcome .node-title { color: var(--green-700); }
+  .node-welcome .node-sub { color: var(--green-600); opacity: 0.8; }
+
+  /* STEP GROUP */
+  .step-group {
+    width: 100%;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 16px;
+    background: var(--card);
+    position: relative;
+  }
+
+  .step-group-label {
+    position: absolute;
+    top: -9px;
+    left: 16px;
+    background: var(--card);
+    padding: 0 6px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--purple-400);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .step-group-inner { display: flex; flex-direction: column; gap: 12px; }
+
+  .step-item { display: flex; gap: 12px; align-items: flex-start; }
+
+  .step-item-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--purple-100);
+    color: var(--purple-700);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-item-title { font-size: 14px; font-weight: 600; color: var(--gray-900); line-height: 1.3; }
+  .step-item-sub { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+  .step-separator { height: 1px; background: var(--gray-100); margin: 0 -16px; }
+
+  /* FIELDS */
+  .step-fields { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+  .field-tag {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 400;
+  }
+
+  .field-required { background: var(--purple-100); color: var(--purple-700); border: 1px solid #c4b8f0; }
+  .field-optional { background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-200); }
+
+  /* CONNECTORS */
+  .arrow-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 32px;
+    position: relative;
+    width: 100%;
+  }
+
+  .arrow-down::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: calc(100% - 8px);
+    width: 1.5px;
+    background: var(--line);
+    transform: translateX(-50%);
+  }
+
+  .arrow-down::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--line);
+  }
+
+  .connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    position: relative;
+    width: 100%;
+  }
+
+  .connector::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    background: var(--line);
+    transform: translateX(-50%);
+  }
+
+  .connector-label {
+    background: var(--bg);
+    padding: 0 8px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gray-400);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* SPLIT */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    margin: 4px 0;
+  }
+
+  .split-path { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .split-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--gray-400); padding: 4px 0; text-align: center; }
+  .split-line { width: 1.5px; flex: 1; min-height: 24px; background: var(--line); }
+
+  .split-node-back {
+    width: 100%;
+    padding: 8px 12px;
+    background: #fff8ed;
+    border: 1px dashed #f5d87a;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--amber-700);
+  }
+
+  .split-node-forward {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--green-50);
+    border: 1px dashed var(--green-300);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--green-500);
+  }
+
+  /* OPTIONAL BLOCK */
+  .optional-block {
+    width: 100%;
+    border: 1px dashed var(--gray-200);
+    border-radius: 10px;
+    padding: 14px 20px;
+    background: var(--gray-50);
+    position: relative;
+  }
+
+  .optional-tag {
+    position: absolute;
+    top: -9px;
+    left: 16px;
+    background: var(--gray-50);
+    padding: 0 6px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gray-400);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .optional-title { font-size: 14px; font-weight: 600; color: var(--gray-600); }
+  .optional-sub { font-size: 12px; color: var(--gray-400); margin-top: 3px; line-height: 1.5; }
+
+  /* PHASE DIVIDER */
+  .phase-divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 4px;
+  }
+
+  .phase-divider::before,
+  .phase-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-100);
+  }
+
+  .phase-divider-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gray-400);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* LEGEND */
+  .legend {
+    max-width: 580px;
+    margin: 64px auto 0;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Campi Agrotech</div>
+  <div class="doc-meta">
+    <div class="doc-title">Fluxo — Onboarding Admin</div>
+    <div class="doc-sub">Módulos: Usuários + Propriedade · v1.0 · Maio 2025</div>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<div class="flow">
+
+  <!-- FASE 1: PRÉ-ACESSO -->
+  <div class="phase-divider"><span class="phase-divider-label">pré-acesso</span></div>
+
+  <!-- CONTRATO FECHADO -->
+  <div class="node node-start node-pill">
+    <div class="node-inner">
+      <div class="node-title">Contrato fechado com a Campi</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- EMAIL CREDENCIAIS -->
+  <div class="node node-system">
+    <div class="node-inner">
+      <div class="node-label">Sistema envia automaticamente</div>
+      <div class="node-title">Email com credenciais de acesso</div>
+      <div class="node-sub">Email + senha temporária gerada pelo sistema</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- FASE 2: PRIMEIRO ACESSO -->
+  <div class="phase-divider"><span class="phase-divider-label">primeiro acesso</span></div>
+
+  <!-- LOGIN -->
+  <div class="node node-action">
+    <div class="node-inner">
+      <div class="node-label">Tela de login</div>
+      <div class="node-title">Acessa com email + senha temporária</div>
+      <div class="node-sub">Autenticação via email e senha. CPF como alternativa futura.</div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <span class="connector-label">validação: usuário existe · está ativo · senha correta</span>
+  </div>
+
+  <!-- VALIDAÇÃO LOGIN -->
+  <div class="split">
+    <div class="split-path">
+      <div class="split-label">credenciais inválidas</div>
+      <div class="split-line"></div>
+      <div class="split-node-back">↩ volta ao login com mensagem de erro</div>
+    </div>
+    <div class="split-path">
+      <div class="split-label">credenciais válidas</div>
+      <div class="split-line"></div>
+      <div class="split-node-forward">✓ acesso concedido</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- TROCA DE SENHA -->
+  <div class="node node-action">
+    <div class="node-inner">
+      <div class="node-label">Obrigatório no primeiro acesso</div>
+      <div class="node-title">Redefinição de senha</div>
+      <div class="node-sub">Usuário não acessa o sistema sem trocar a senha temporária.</div>
+      <div class="step-fields">
+        <span class="field-tag field-required">nova senha</span>
+        <span class="field-tag field-required">confirmar senha</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- FASE 3: ONBOARDING -->
+  <div class="phase-divider"><span class="phase-divider-label">onboarding</span></div>
+
+  <!-- BOAS VINDAS -->
+  <div class="node node-welcome">
+    <div class="node-inner">
+      <div class="node-label">Onboarding</div>
+      <div class="node-title">Tela de boas-vindas</div>
+      <div class="node-sub">Antes de começar, cadastre sua propriedade. Isso leva menos de 2 minutos.</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- CADASTRO PROPRIEDADE -->
+  <div class="step-group">
+    <div class="step-group-label">cadastro de propriedade · 4 passos</div>
+    <div class="step-group-inner">
+
+      <div class="step-item">
+        <div class="step-item-num">1</div>
+        <div class="step-item-content">
+          <div class="step-item-title">Dados básicos</div>
+          <div class="step-item-sub">Nome · foto · cidade · estado</div>
+        </div>
+      </div>
+
+      <div class="step-separator"></div>
+
+      <div class="step-item">
+        <div class="step-item-num">2</div>
+        <div class="step-item-content">
+          <div class="step-item-title">Área e localização</div>
+          <div class="step-item-sub">Área total (obrigatória) · endereço · GPS</div>
+        </div>
+      </div>
+
+      <div class="step-separator"></div>
+
+      <div class="step-item">
+        <div class="step-item-num">3</div>
+        <div class="step-item-content">
+          <div class="step-item-title">Responsável</div>
+          <div class="step-item-sub">Nome · CPF/CNPJ · telefone</div>
+        </div>
+      </div>
+
+      <div class="step-separator"></div>
+
+      <div class="step-item">
+        <div class="step-item-num">4</div>
+        <div class="step-item-content">
+          <div class="step-item-title">Dados adicionais</div>
+          <div class="step-item-sub">Inscrição estadual · sub-áreas · observações</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector">
+    <span class="connector-label">validação por passo · volta se inválido</span>
+  </div>
+
+  <!-- REVISÃO PROPRIEDADE -->
+  <div class="node node-welcome">
+    <div class="node-inner">
+      <div class="node-label">Revisão</div>
+      <div class="node-title">Revisar e confirmar propriedade</div>
+      <div class="node-sub">Pode editar qualquer passo antes de confirmar.</div>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- FASE 4: PÓS ONBOARDING -->
+  <div class="phase-divider"><span class="phase-divider-label">pós onboarding · opcional</span></div>
+
+  <!-- CADASTRO USUÁRIOS -->
+  <div class="optional-block">
+    <div class="optional-tag">opcional — pode fazer depois</div>
+    <div class="optional-title">Cadastro de operadores</div>
+    <div class="optional-sub">Admin convida operadores vinculando à propriedade. Cada operador recebe credenciais por email.</div>
+    <div class="step-fields" style="margin-top:10px">
+      <span class="field-tag field-required">nome</span>
+      <span class="field-tag field-required">email</span>
+      <span class="field-tag field-required">CPF</span>
+      <span class="field-tag field-required">perfil: operador</span>
+      <span class="field-tag field-optional">permissões por módulo</span>
+    </div>
+  </div>
+
+  <div class="arrow-down"></div>
+
+  <!-- DASHBOARD -->
+  <div class="node node-end node-pill">
+    <div class="node-inner">
+      <div class="node-title">Dashboard da propriedade</div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background: var(--blue-400);"></div>
+      Ação do sistema
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: var(--purple-400);"></div>
+      Ação do usuário
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: var(--amber-400); border-radius: 50%;"></div>
+      Validação com feedback de erro
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: var(--gray-200); border: 1px dashed var(--gray-400);"></div>
+      Etapa opcional
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: var(--green-500); border-radius: 50%;"></div>
+      Destino final
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
